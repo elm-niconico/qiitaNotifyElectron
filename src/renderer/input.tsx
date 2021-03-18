@@ -1,7 +1,13 @@
 import {FC, useState} from "react";
 import {SetterOrUpdater, useRecoilState} from "recoil";
-import {tagListState} from "../root";
-import ArticleClient, {TagJsonModel} from "../../main/client/article-client";
+import ArticleClient, {TagJsonModel} from "../main/client/article-client";
+
+
+const style = {
+    gridRow: 1,
+    gridColumn: 2
+}
+
 
 export const Input: FC<{setTags: SetterOrUpdater<TagJsonModel[]>}> = (props) => {
 
@@ -16,14 +22,11 @@ export const Input: FC<{setTags: SetterOrUpdater<TagJsonModel[]>}> = (props) => 
             .catch(e => console.log(e));
 
     return (
-        <div id={"input"}>
+        <div id={"input"} style={style}>
             <input type={"text"}
                    value={text}
                    onChange={(text) =>setText(_=> text.target.value)}/>
-            <button onClick={() => {
-
-                searchTagList(text)
-            }}>検索</button>
+            <button onClick={() => searchTagList(text)}>検索</button>
         </div>
     );
 }

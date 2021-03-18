@@ -1,17 +1,18 @@
 import {FC} from "react";
 import ReactDOM from "react-dom";
 import './index.scss';
-import {TagList} from "../tag-list/tag-list";
-import {Input} from "../input/input";
+import {TagList} from "../tag/tag-list";
+import {Input} from "../input";
 import {atom, RecoilRoot, useRecoilState, useRecoilValue} from "recoil";
 import {TagJsonModel} from "../../main/client/article-client";
-import {Tag} from "../tag/tag";
-import {SideBar} from "../side-bar/side-bar";
+import {SideBar} from "../side-bar";
+import {Simulate} from "react-dom/test-utils";
+import select = Simulate.select;
 
 
-export enum SelectedTagList{
+export enum Select{
     //ローカルに保存されているタグ
-    Storedlocally,
+    StoredLocally,
     //ネットからApi経由で取得する状態
     NetWork
 }
@@ -27,31 +28,45 @@ export const registeredTagListState = atom<TagJsonModel[]>({
     default : []
 });
 
-export const selectTagListState = atom<SelectedTagList>({
+export const selectState = atom<Select>({
     key: "selected-tag-list",
-    default : SelectedTagList.NetWork
+    default : Select.NetWork
 });
 
 
 const Root: FC = () => {
-    const [selected] = useRecoilState(selectTagListState);
-
+    const [selected] = useRecoilState(selectState);
     const [tagList, setTagList] = useRecoilState(stateChoice(selected));
 
+    const componentChoice = (select: Select) => {
+        switch (select){
+            case Select.NetWork:
+                return (
+                    <>
+                        <Input setTags={setTagList}/>
+                        <TagList tags={tagList}/>
+                    </>
+                )
+            case Select.StoredLocally:
+                return <TagList tags={tagList}/>
+        }
+    }
+
     return(
-    <RecoilRoot>
-        <Input setTags={setTagList}/>
-        <TagList tags={tagList}/>
+    <>
+        {componentChoice(selected)}
         <SideBar />
-    </RecoilRoot>
+    </>
 );
 }
 
-const stateChoice = (select: SelectedTagList)=> {
+
+
+const stateChoice = (select: Select)=> {
     switch (select){
-        case SelectedTagList.NetWork:
+        case Select.NetWork:
             return tagListState;
-        case SelectedTagList.Storedlocally:
+        case Select.StoredLocally:
             return registeredTagListState;
     }
 }
