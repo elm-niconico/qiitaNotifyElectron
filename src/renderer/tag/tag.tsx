@@ -1,11 +1,12 @@
 import {FC} from "react";
+import {TagJsonModel} from "../../main/client/article-client";
 
-interface Props{
-    tagName: string;
-}
 
-export const Tag: FC<Props> = (props)=>(
+
+
+
+export const Tag: FC<TagJsonModel> = (props)=>(
     <div className={"tag"}>
-        {props.tagName}
+        {props.id}
     </div>
 );

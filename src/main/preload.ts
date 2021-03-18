@@ -1,8 +1,7 @@
 import {  contextBridge } from 'electron';
-export class Test{
-    test = ()=>{console.log("hello! world")}
-}
+import ArticleClient from "./client/article-client";
+
 contextBridge.exposeInMainWorld(
-    'api',
-    new Test()
+    'client',
+    new ArticleClient()
 );

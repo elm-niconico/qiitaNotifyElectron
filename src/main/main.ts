@@ -36,6 +36,8 @@ app.setAppUserModelId(process.execPath);
 app.whenReady().then(createWindow)
 // 全てのウィンドウが閉じたときの処理
 app.on('window-all-closed', () => {
+
+
     // macOSのとき以外はアプリケーションを終了させます
     if (process.platform !== 'darwin') {
         app.quit();

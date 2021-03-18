@@ -1,21 +1,25 @@
-import {FC, useState} from "react";
+import {FC} from "react";
 import {Tag} from "../tag/tag";
-import {Test} from "../../main/preload";
+import {useRecoilState} from "recoil";
+import {registeredTagListState, SelectedTagList, selectTagListState, tagListState} from "../root";
+import {TagJsonModel} from "../../main/client/article-client";
 
-export interface TagProps{
-    tagName: string;
-}
 
-export const TagList: FC = () => {
-    const [list, setList] = useState<TagProps[]>([]);
+export const TagList: FC<{tags:TagJsonModel[]}> = (tagListProps) => {
 
-    let test : Test|null = null
-        //@ts-ignore
-        test = window.api;
-    test?.test()
+
+
     return (
     <div id={"tag-list"}>
-        {list.map(tag => <Tag tagName={tag.tagName} />)}
+        {tagListProps.tags.map(t => <Tag key={t.id}
+                            followers_count={t.followers_count}
+                            id={t.id}
+                            items_count={t.items_count}
+                            icon_url={t.icon_url} />)}
     </div>
+
     );
 };
+
+
+
