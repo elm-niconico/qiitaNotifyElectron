@@ -14,6 +14,13 @@ contextBridge.exposeInMainWorld(
     'fetchTags',
     async (tags?: string) => await ipcRenderer.invoke("fetchTags", tags)
 );
+
+contextBridge.exposeInMainWorld(
+    'deleteTag',
+    async (tagId: string) => await ipcRenderer.invoke("deleteTag", tagId)
+);
+
+
 contextBridge.exposeInMainWorld(
     'appQuit',
     async () => await ipcRenderer.invoke("app-quit")

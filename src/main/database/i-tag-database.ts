@@ -11,5 +11,6 @@ export interface IDatabaseOperator{
     update(oldTagId:string, newTag: TagModel): DBResult
     select(): TagModel[]|undefined;
     selectById(tagId: string): TagModel|undefined;
-    hasData(tagId: string): boolean
+    hasData(tagId: string): boolean;
+    close(): void;
 }

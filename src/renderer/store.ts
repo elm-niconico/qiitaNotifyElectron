@@ -8,6 +8,9 @@ export const selectDbTag: ()=>Promise<TagModel[]> = () =>  window.selectAll();
 export const addTag: (tagId: string) => Promise<void>  = (tagId) =>　window.addTag(tagId);
 
 //@ts-ignore
+export const deleteTag: (tagId: string)=>Promise<void> = (tagId) => window.deleteTag(tagId);
+
+//@ts-ignore
 export const appQuit: ()=>Promise<void> = window.appQuit;
 //@ts-ignore
 export const windowMax: ()=>Promise<void> = window.windowMax;

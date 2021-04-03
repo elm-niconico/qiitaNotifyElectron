@@ -6,28 +6,28 @@ import Modal from 'react-modal';
 import {ModalDialog} from "../modal/modal-dialog";
 
 export interface Props{
-
+    diaDescription: string;
+    onOkClick: () => void;
+    onOkText : string;
 }
 
-export const Tag: FC<TagModel> = ({id})=> {
-    const setDb = useSetDb();
+export const Tag: FC<TagModel & Props> = (p)=> {
     const [isOpen, setOpen] = useState<boolean>(false);
-
 
     return (
         <>
             <ModalDialog
-                description={"タグを登録しますか？"}
+                description={p.diaDescription}
                 isOpen={isOpen}
                 onOkClick={()=>{
-                    setDb(id)
+                    p.onOkClick();
                     setOpen(false);
                 }}
                 onCancelClick={() => {setOpen(false)}}
-                okText={"登録する"}/>
+                okText={p.onOkText}/>
 
             <div className={"tag"} onClick={() => {setOpen(true)}}>
-                {id}
+                {p.id}
             </div>
         </>
 

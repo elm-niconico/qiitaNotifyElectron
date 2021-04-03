@@ -53,4 +53,7 @@ export class MockTagDatabase implements IDatabaseOperator{
         return this.selectById(tagId) !== undefined
     }
 
+    close(): void {
+    }
+
 }

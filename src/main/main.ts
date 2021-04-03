@@ -4,22 +4,23 @@ import path from 'path';
 import {mainReloader, rendererReloader} from 'electron-hot-reload';
 import {QiitaArticleJob} from "./job/QiitaArticleJob";
 import {startJob} from "./main-ipc";
+import {DatabaseFactory} from "./database/database-factory";
 
-const mainFile = path.join(app.getAppPath(), 'build', 'main.js');
-const rendererFile = path.join(app.getAppPath(), 'build', 'index.js');
-const preload = path.join(app.getAppPath(), 'build', 'preload.js');
-
-mainReloader(mainFile, undefined, (__, _) => {
-    console.log("It is a main'AAs process hook!");
-});
-
-rendererReloader(rendererFile, undefined, (__, _) => {
-    console.log("It is a renderer's process hook!");
-});
-
-rendererReloader(preload, undefined, () => {
-    console.log("preload");
-});
+// const mainFile = path.join(app.getAppPath(), 'build', 'main.js');
+// const rendererFile = path.join(app.getAppPath(), 'build', 'index.js');
+// const preload = path.join(app.getAppPath(), 'build', 'preload.js');
+//
+// mainReloader(mainFile, undefined, (__, _) => {
+//     console.log("It is a main'AAs process hook!");
+// });
+//
+// rendererReloader(rendererFile, undefined, (__, _) => {
+//     console.log("It is a renderer's process hook!");
+// });
+//
+// rendererReloader(preload, undefined, () => {
+//     console.log("preload");
+// });
 
 
 let mainWindow : BrowserWindow;
@@ -38,7 +39,7 @@ const createWindow = () => {
 
     mainWindow.loadFile(path.join(__dirname, 'index.html')).catch(e => console.log(e));
     // デベロッパーツールの起動
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 }
 export const miniumWindow = () => {
     mainWindow.minimize();
@@ -48,21 +49,26 @@ export const maxWindow = () => {
     mainWindow.maximize();
 }
 
+export const closeWindow = () => {
+    mainWindow.close();
+}
 
 
-const job = new QiitaArticleJob(1);
-job.runAsync().catch(e => console.log(e));
 
 app.setAppUserModelId(process.execPath);
 app.whenReady().then(createWindow)
+
+
+const db = DatabaseFactory.factoryDataBase('JSON');
+startJob(db);
+const job = new QiitaArticleJob(1, db);
+job.runAsync().catch(e => console.log(e));
 // 全てのウィンドウが閉じたときの処理
 app.on('window-all-closed', () => {
+    db.close();
+
     // macOSのとき以外はアプリケーションを終了させます
     if (process.platform !== 'darwin') {
         app.quit();
     }
 });
-
-
-
-startJob();

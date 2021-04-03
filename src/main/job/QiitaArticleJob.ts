@@ -5,8 +5,14 @@ import open from "open";
 
 import {DatabaseFactory} from "../database/database-factory";
 import {TagRepository} from "../tag/tag-repository";
+import {IDatabaseOperator} from "../database/i-tag-database";
 export  class QiitaArticleJob extends Job{
     private _client = new QiitaArticleClient();
+
+
+    constructor(hours: number, private _db: IDatabaseOperator ) {
+        super(hours);
+    }
 
     notify(): void {
         const info = this._client.latestArticle;
@@ -22,8 +28,8 @@ export  class QiitaArticleJob extends Job{
 
     async runMethodAsync(): Promise<boolean> {
 
-        const db = DatabaseFactory.factoryDataBase('MOCK');
-        const tagList = new TagRepository(db);
+
+        const tagList = new TagRepository(this._db);
 
         const model = tagList.selectAll();
 

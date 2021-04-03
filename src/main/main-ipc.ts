@@ -2,12 +2,12 @@ import {app, ipcMain} from "electron";
 import {DatabaseFactory} from "./database/database-factory";
 import {TagRepository} from "./tag/tag-repository";
 import {QiitaArticleClient} from "./job/qiita-article-client";
-import {maxWindow, miniumWindow} from "./main";
+import {closeWindow, maxWindow, miniumWindow} from "./main";
+import {IDatabaseOperator} from "./database/i-tag-database";
 
 
 
-export const startJob = () => {
-    const db = DatabaseFactory.factoryDataBase('MOCK');
+export const startJob = (db: IDatabaseOperator) => {
 
     const repository = new TagRepository(db);
 
@@ -26,8 +26,10 @@ export const startJob = () => {
     ipcMain.handle("fetchTags", async (event, tag? :string)=>{
         return await articleClient.fetchQiitaTagsAsync(tag);
     });
+
+
     ipcMain.handle("app-quit", ()=>{
-        app.quit();
+        closeWindow();
     });
     ipcMain.handle("windowMax", ()=>{
         maxWindow();
@@ -35,6 +37,7 @@ export const startJob = () => {
     ipcMain.handle("windowMin", ()=>{
         miniumWindow();
     });
+
 // ipcMain.handle("deleteTag", (event, tag :string)=>{
 // ipcMain.handle("deleteTag", (event, tag :string)=>{
 //     client.deleteTag(tag);
